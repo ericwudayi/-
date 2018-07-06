@@ -1,3 +1,4 @@
+var fs = require("fs");
 const express = require('express');
 const app = express();
 var bodyParser = require('body-parser');
@@ -13,7 +14,7 @@ app.use(session({
 
 let onlineCount = 0;
 let login_status = false; 
-let username = ""
+//let username = ""
 app.use(express.static(__dirname));
 app.set('views', __dirname+'/views');
 app.engine('html',require('ejs').renderFile)
@@ -21,21 +22,23 @@ app.set('view engine','html')
 app.use(bodyParser());
 
 app.get('/',(req,res) => {
-    if (login_status==true){
-        username = req.session.username;
-        console.log(username);
-    }
+    //if (login_status==true){
+      //  username = app.username;
+        //console.log(username);
+    //}
     res.render('index.ejs',{
-        login : login_status,
-        user : username
+        login : app.login_status,
+        user : app.username
     });
 });
 
 app.post('/reg',(req,res)=>{
     console.log("post something");
-    req.session.username = req.body.username;
-    req.session.login_status = true;
-    login_status = true
+    //req.session.username = req.body.username;
+    app.username = req.body.username;
+    app.login_status = true;
+    //req.session.login_status = true;
+    //login_status = true
     res.redirect('/');
     
 
@@ -44,27 +47,34 @@ app.post('/reg',(req,res)=>{
 
 app.get('/living',(req,res)=>{
     res.render('living_page.ejs',{
-        login : login_status,
-        user : username
+        login : app.login_status,
+        user : app.username
     });
 });
 
 app.post('/creat_channel',(req,res)=>{
-    var sess = req.session
+    var sess = req.session;
+    var channel_name = req.body.channel_name;
+    fs.mkdir(channel_name,function(err){
+        console.log(err);
+    })
     res.render('index.ejs',{
-        login : sess.login_status,
-        user : sess.username
+        login : app.login_status,
+        user : app.username
     });
-    console.log("channel_name");
-    channel_name = req.body.channel_name;
-    name = req.body.living_name;
-    console.log(channel_name);
-    console.log(name);
+ 
 });
+
+app.get('/rtmp/push', function (req, res) {
+  console.log('ok push: ' + JSON.stringify(req.query));
+
+});
+
+
 // 當發生連線事件
 io.on('connection', (socket) => {
 	onlineCount++;
-	socket.emit("login",login_status);
+	socket.emit("login",app.login_status);
 	console.log(login_status);
 	io.emit("online",onlineCount);
     console.log('Hello!');  // 顯示 Hello!
@@ -75,7 +85,7 @@ io.on('connection', (socket) => {
  	socket.on("send", (msg) => {
         console.log(msg)
         //if (Object.keys(msg).length < 2) return;
- 		msg.name = "遊客";
+ 		msg.name = app.username;
         // 廣播訊息到聊天室
         io.emit("msg", msg);
     });
