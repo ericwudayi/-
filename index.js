@@ -25,7 +25,7 @@ app.get('/',(req,res) => {
         username = req.session.username;
         console.log(username);
     }
-    res.render('index.html',{
+    res.render('index.ejs',{
         login : login_status,
         user : username
     });
@@ -43,10 +43,23 @@ app.post('/reg',(req,res)=>{
 });
 
 app.get('/living',(req,res)=>{
-    res.render('index3.ejs',{
+    res.render('living_page.ejs',{
         login : login_status,
         user : username
     });
+});
+
+app.post('/creat_channel',(req,res)=>{
+    var sess = req.session
+    res.render('index.ejs',{
+        login : sess.login_status,
+        user : sess.username
+    });
+    console.log("channel_name");
+    channel_name = req.body.channel_name;
+    name = req.body.living_name;
+    console.log(channel_name);
+    console.log(name);
 });
 // 當發生連線事件
 io.on('connection', (socket) => {

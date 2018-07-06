@@ -30,12 +30,23 @@
             
             <ul class="nav justify-content-end">
               <li class="nav-item">
+                <a class="nav-link" href="views/creat_channel.html">創建頻道</a>
+              </li>
+               <% if (!login) { %>
+              
+               
+              <li class="nav-item">
                 <a class="nav-link" href="views/registration.html">註冊</a>
               </li>
               <li class="nav-item">
                 <a class="btn btn-primary" href="views/login.html">登入</a>
               </li>
-
+              <% } %>
+                
+              <% if(login) { %>
+              <li class="nav-item">
+                <a class="nav-link" href="views/profile.html"><%=user%></a>
+              <% } %>
             </ul>
 <!--          </div>-->
           
