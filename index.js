@@ -20,7 +20,7 @@ app.set('view engine','html')
 app.use(bodyParser());
 
 app.get('/',(req,res) => {
-    
+
     res.render('index.ejs',{
         login : req.session.login_status,
         user : req.session.user
@@ -32,6 +32,7 @@ app.post('/reg',(req,res)=>{
     req.session.user = req.body.username;
     req.session.login_status = true;
     //login_status = true
+    console.log(req.session.login_status);
     res.redirect('/');
 });
 
@@ -54,6 +55,9 @@ app.get('/profile',(req,res)=>{
     res.render('profile.html');
 });
 
+app.get('/creatChannel',(req,res)=>{
+    res.render('creat_channel.html');
+});
 
 
 app.post('/creat_channel',(req,res)=>{
