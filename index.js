@@ -14,7 +14,7 @@ app.use(session({
 
 let onlineCount = 0;
 let login_status = false; 
-//let username = ""
+let username = ""
 app.use(express.static(__dirname));
 app.set('views', __dirname+'/views');
 app.engine('html',require('ejs').renderFile)
@@ -22,23 +22,21 @@ app.set('view engine','html')
 app.use(bodyParser());
 
 app.get('/',(req,res) => {
-    //if (login_status==true){
-      //  username = app.username;
-        //console.log(username);
-    //}
+    if (login_status==true){
+        username = req.session.username;
+        console.log(username);
+    }
     res.render('index.ejs',{
-        login : app.login_status,
-        user : app.username
+        login : req.session.login_status,
+        user : req.session.username
     });
 });
 
 app.post('/reg',(req,res)=>{
     console.log("post something");
-    //req.session.username = req.body.username;
-    app.username = req.body.username;
-    app.login_status = true;
-    //req.session.login_status = true;
-    //login_status = true
+    req.session.username = req.body.username;
+    req.session.login_status = true;
+    login_status = true
     res.redirect('/');
     
 
@@ -47,8 +45,8 @@ app.post('/reg',(req,res)=>{
 
 app.get('/living',(req,res)=>{
     res.render('living_page.ejs',{
-        login : app.login_status,
-        user : app.username
+        login : req.session.login_status,
+        user : req.session.username
     });
 });
 
@@ -59,8 +57,8 @@ app.post('/creat_channel',(req,res)=>{
         console.log(err);
     })
     res.render('index.ejs',{
-        login : app.login_status,
-        user : app.username
+        login : sess.login_status,
+        user : sess.username
     });
  
 });
@@ -74,7 +72,7 @@ app.get('/rtmp/push', function (req, res) {
 // 當發生連線事件
 io.on('connection', (socket) => {
 	onlineCount++;
-	socket.emit("login",app.login_status);
+	socket.emit("login",login_status);
 	console.log(login_status);
 	io.emit("online",onlineCount);
     console.log('Hello!');  // 顯示 Hello!
@@ -85,7 +83,8 @@ io.on('connection', (socket) => {
  	socket.on("send", (msg) => {
         console.log(msg)
         //if (Object.keys(msg).length < 2) return;
- 		msg.name = app.username;
+ 		//msg.name = name;
+        
         // 廣播訊息到聊天室
         io.emit("msg", msg);
     });
