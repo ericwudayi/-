@@ -12,9 +12,7 @@ app.use(session({
 }));
 
 
-let onlineCount = 0;
-let login_status = false; 
-let username = ""
+let onlineCount = 0; 
 app.use(express.static(__dirname));
 app.set('views', __dirname+'/views');
 app.engine('html',require('ejs').renderFile)
@@ -22,33 +20,41 @@ app.set('view engine','html')
 app.use(bodyParser());
 
 app.get('/',(req,res) => {
-    if (login_status==true){
-        username = req.session.username;
-        console.log(username);
-    }
+    
     res.render('index.ejs',{
         login : req.session.login_status,
-        user : req.session.username
+        user : req.session.user
     });
 });
 
 app.post('/reg',(req,res)=>{
     console.log("post something");
-    req.session.username = req.body.username;
+    req.session.user = req.body.username;
     req.session.login_status = true;
-    login_status = true
+    //login_status = true
     res.redirect('/');
-    
-
-
 });
 
 app.get('/living',(req,res)=>{
     res.render('living_page.ejs',{
         login : req.session.login_status,
-        user : req.session.username
+        user : req.session.user
     });
 });
+
+app.get('/registration',(req,res)=>{
+    res.render('registration.html');
+});
+
+app.get('/login',(req,res)=>{
+    res.render('login.html');
+});
+
+app.get('/profile',(req,res)=>{
+    res.render('profile.html');
+});
+
+
 
 app.post('/creat_channel',(req,res)=>{
     var sess = req.session;
@@ -58,7 +64,7 @@ app.post('/creat_channel',(req,res)=>{
     })
     res.render('index.ejs',{
         login : sess.login_status,
-        user : sess.username
+        user : sess.user
     });
  
 });
@@ -72,8 +78,7 @@ app.get('/rtmp/push', function (req, res) {
 // 當發生連線事件
 io.on('connection', (socket) => {
 	onlineCount++;
-	socket.emit("login",login_status);
-	console.log(login_status);
+	
 	io.emit("online",onlineCount);
     console.log('Hello!');  // 顯示 Hello!
     
@@ -84,7 +89,7 @@ io.on('connection', (socket) => {
         console.log(msg)
         //if (Object.keys(msg).length < 2) return;
  		//msg.name = name;
-        
+
         // 廣播訊息到聊天室
         io.emit("msg", msg);
     });
