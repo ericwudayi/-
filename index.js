@@ -29,6 +29,7 @@ app.get('/',(req,res) => {
 
 app.post('/reg',(req,res)=>{
     console.log("post something");
+    console.log('body: ' + JSON.stringify(req.body));
     req.session.user = req.body.username;
     req.session.login_status = true;
     //login_status = true

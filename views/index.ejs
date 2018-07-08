@@ -24,6 +24,7 @@
             .validateTips { border: 1px solid transparent; padding: 0.3em; }
         </style>
         <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
         <script>
          $( function() {
@@ -68,7 +69,7 @@
             }
 
             function addUser() {
-              var valid = true;
+               var valid = true;
               allFields.removeClass( "ui-state-error" );
 
               valid = valid && checkLength( name, "username", 3, 16 );
@@ -79,22 +80,32 @@
               valid = valid && checkRegexp( email, emailRegex, "eg. ui@jquery.com" );
               valid = valid && checkRegexp( password, /^([0-9a-zA-Z])+$/, "Password field only allow : a-z 0-9" );
 
-              if ( valid ) {
-                
-                dialog.dialog( "close" );
-                var Username = name.val();
-                var data = {username : Username}
+
+              if (valid){
+                var data = {};
+                data.username = name.val();
                 $.ajax({
                   type: "post",
                   url: "reg",
                   timeout: 2000,
                   data: JSON.stringify(data),
                   contentType: 'application/json',
+                  success: function(data) {
+                              console.log('success');
+                              console.log(JSON.stringify(data));
+                          },
+                  error: function(jqXHR, textStatus, err) {
+                //show error message
+                    alert('aa' + name.val());
+                    alert(xhr.statusText);
+                    console.log(textStatus);
+                    console.log(error);
+                  }
                   
                 });
-                location.reload();  
-              }
-              
+                dialog.dialog( "close" );
+                location.reload();
+              }  
             }
 
             dialog = $( "#dialog-form" ).dialog({
@@ -117,7 +128,6 @@
             form = dialog.find( "form" ).on( "submit", function( event ) {
               event.preventDefault();
               addUser();
-
             });
 
             $( "#create-user" ).button().on( "click", function() {
@@ -245,11 +255,11 @@
           <form action="/reg" method="post">
             <fieldset>
               <label for="name">Name</label>
-              <input type="text" name="name" id="name" value="Jane Smith" class="text ui-widget-content ui-corner-all">
+              <input type="text" name="name" id="name"  class="text ui-widget-content ui-corner-all">
               <label for="email">Email</label>
-              <input type="text" name="email" id="email" value="jane@smith.com" class="text ui-widget-content ui-corner-all">
+              <input type="text" name="email" id="email"  class="text ui-widget-content ui-corner-all">
               <label for="password">Password</label>
-              <input type="password" name="password" id="password" value="xxxxxxx" class="text ui-widget-content ui-corner-all">
+              <input type="password" name="password" id="password" class="text ui-widget-content ui-corner-all">
 
               <!-- Allow form submission with keyboard without duplicating the dialog button -->
               <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
