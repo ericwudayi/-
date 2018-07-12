@@ -12,7 +12,8 @@ app.use(session({
 }));
 
 
-let onlineCount = 0; 
+let onlineCount = 0;
+let maxPrice = 1 
 app.use(express.static(__dirname));
 app.set('views', __dirname+'/views');
 app.engine('html',require('ejs').renderFile)
@@ -84,6 +85,7 @@ app.get('/rtmp/push', function (req, res) {
 io.on('connection', (socket) => {
 	onlineCount++;
 	
+    io.emit("compare", maxPrice);
 	io.emit("online",onlineCount);
     console.log('Hello!');  // 顯示 Hello!
     
@@ -91,12 +93,24 @@ io.on('connection', (socket) => {
  		socket.emit("greet",onlineCount)
  	})
  	socket.on("send", (msg) => {
-        console.log(msg)
+        console.log(msg);
         //if (Object.keys(msg).length < 2) return;
  		//msg.name = name;
 
         // 廣播訊息到聊天室
         io.emit("msg", msg);
+    });
+
+    socket.on("price",(msg)=>{
+        console.log(msg);
+        if((Object.values(msg)[1]>=0)&&(Object.values(msg)[1]<=999))
+        {
+            if(Object.values(msg)[1]>maxPrice)
+            {
+                maxPrice =Object.values(msg)[1];
+                io.emit("compare", maxPrice);
+            }
+        }
     });
     // 當發生離線事件
     socket.on('disconnect', () => {
