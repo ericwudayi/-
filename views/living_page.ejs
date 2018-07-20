@@ -133,7 +133,6 @@
     <div id="mixed">  
         <div  id="container">
             <div id="status-box">Server: <span id="status">-</span> / <span id="online">0</span> online.</div>
-            <div id="status-box">Max price is : <span id="maxPrice"></span> !! </div>
             <div id="content">
                 <div class="msg">
                     <span class="name">Duye</span>
@@ -159,36 +158,32 @@
                     </form>
                 </div>
 
-                <div  id="bidding-box">
+                
+                <% } %>     
+                 
+            </div>
+        </div>
+
+        <div  id="container2" style="display:none">
+            <div id="status-box2">最高價錢: <span id="maxPrice"> - </span> !!  由 <span id="P_name"> 0 </span></div>
+            <div id="chat"> 
+
+                <% if (!login) { %>
+                <div> 登入以繼續</div>
+                <% } %>
+                
+                <% if(login) { %>
+               <div  id="bidding-box">
                     <form id="bidding-form">
                         <input type="hidden" name="name" id="name" value=<%=user %> >
                         <input type="number" name="msg" id="msg" placeholder="說點什麼？">
                         <input type="submit" value="競標">
                     </form>
                 </div>
-                <% } %>     
-                 
+                <% } %>
             </div>
         </div>
 
-        <div  id="container2">
-            <!-- <div id="status-box">Max price is : <span id="maxPrice"></span> !! </div>
-            <div id="content2">
-                <div class="msg">
-                    <span class="name">Duye</span>
-                </div>
-                <div class="msg">
-                    <span class="name">Alice</span>
-                </div>
-            </div> -->
-            
-        </div>
-
-        
-
-
-
-        <div  id="price"></div>
         <button onclick="myFunction()">聊天或競標</button>
     </div>
 
@@ -204,6 +199,7 @@
             var biddingForm = document.getElementById("bidding-form");
             var content = document.getElementById("content");
             var maxPrice = document.getElementById("maxPrice");
+            var p_name = document.getElementById("P_name");
 
             socket.on("connect", function () {
                 status.innerText = "Connected.";              
@@ -217,8 +213,11 @@
                 online.innerText = amount;
             });
             
-            socket.on("compare", function(price){
+            socket.on("compare", function(d){
+                var price = d.msg
                 maxPrice.innerText = price;
+                var name = d.name
+                p_name.innerText = name;
             });
                
             socket.on("msg", function (d) {
@@ -271,7 +270,7 @@
         function myFunction() {
             var x = document.getElementById("container");
             var y = document.getElementById("container2");
-            y.style.display = "block";
+            
             if (x.style.display == "none") {
                 y.style.display = "none";
                 x.style.display = "block";

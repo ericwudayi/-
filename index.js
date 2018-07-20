@@ -84,8 +84,8 @@ app.get('/rtmp/push', function (req, res) {
 // 當發生連線事件
 io.on('connection', (socket) => {
 	onlineCount++;
-	
-    io.emit("compare", maxPrice);
+	maxPrice = 0;
+    io.emit("compare", {name:"None",msg:maxPrice});
 	io.emit("online",onlineCount);
     console.log('Hello!');  // 顯示 Hello!
     
@@ -106,9 +106,9 @@ io.on('connection', (socket) => {
         if((Object.values(msg)[1]>=0)&&(Object.values(msg)[1]<=999))
         {
             if(Object.values(msg)[1]>maxPrice)
-            {
-                maxPrice =Object.values(msg)[1];
-                io.emit("compare", maxPrice);
+            {   
+                maxPrice = Object.values(msg)[1];
+                io.emit("compare", msg);
             }
         }
     });
