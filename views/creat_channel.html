@@ -8,15 +8,19 @@
 </head>
 <body>
 
-	
-	<h2>孩子，網紅時代，是時後來當實況煮了 ! </h2>
 	<div id="panel">
-		<form action="/creat_channel" method="post">
-					頻道名稱(限英文，網址上的)：<input name="channel_name"><P>
-					實況名稱(網頁上顯示): <input name="living_name"><P>
-			<input type="submit" value="送出表單">
-		</form>
+		<div id="text"><div id="t1">直播</div>時代，</div>
+		<div id="text2">等你<div id="t2">來戰</div></div>
+				<form action="/creat_channel" method="post"  id="form">
+					頻道名稱：<input name="channel_name" id="input1"><P>
+					實況名稱：<input name="living_name" id="input2"><P>
+								<input type="submit" value="送出表單" id="btn1">
+				</form>
 	</div>
+	
+	<div id="mask1"></div>
+	<div id="mask2"></div>
+	<div id="mask3"></div>
 </body>
 
 </html>
