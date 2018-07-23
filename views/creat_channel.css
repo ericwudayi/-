@@ -7,6 +7,8 @@ body{
 
 
 #panel{
+	padding-top:130px;
+	background-color:#ffffffc0;
 	margin:0 auto;
 	margin-top:10%;
 	width:25%;
@@ -14,7 +16,8 @@ body{
 	overflow:static;
 	font-weight:300;
 	font-family: 'Noto Sans TC', sans-serif;
-	border-bottom:2px solid ;
+	border-top:1px solid #000;
+	border-bottom:1px solid #000;	
 	font-size:20px;
 }
 #text,#text2,#t1,#t2{
