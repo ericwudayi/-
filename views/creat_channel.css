@@ -1,6 +1,6 @@
 @import url(https://fonts.googleapis.com/earlyaccess/notosanstc.css);
 body{
-	background-image: linear-gradient(to right bottom, #e97216, #ff8480, #ffadcd, #fadaf7, #ffffff);
+	/*background-image: linear-gradient(to right bottom, #e97216, #ff8480, #ffadcd, #fadaf7, #ffffff);*/
 	height:900px;
 }
 
@@ -34,10 +34,38 @@ body{
 #text{
 	bottom:110px;
 	left:50px;
+	/* Safari 4.0 - 8.0 */
+    -webkit-animation-name: example;
+    -webkit-animation-duration: 5s;
+    -webkit-animation-timing-function: ease-out;;
+    -webkit-animation-delay: 1s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-direction: alternate;
+    /* Standard syntax */
+    animation-name: example;
+    animation-duration: 5s;
+    animation-timing-function: ease-out;;
+    animation-delay: 1s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
 }
 #text2{
 	bottom:70px;
 	right:0px;
+	/* Safari 4.0 - 8.0 */
+    -webkit-animation-name: example2;
+    -webkit-animation-duration: 5s;
+    -webkit-animation-timing-function: ease-in-out;
+    -webkit-animation-delay: 1s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-direction: alternate;
+    /* Standard syntax */
+    animation-name: example2;
+    animation-duration: 5s;
+    animation-timing-function: ease-in-out;
+    animation-delay: 1s;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
 }
 #t1,#t2{
 	font-size:70px;
@@ -104,3 +132,34 @@ transform:matrix(-0.94,-0.34,-1.54,-1.62,0,0);
 	top:70px;
 	height:150px;
 }
+
+
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes example {
+    0%   {bottom:110px;left:50px;}
+    50%  {bottom:130px;left:50px;}
+    100% {bottom:110px;left:50px;}
+}
+
+/* Standard syntax */
+@keyframes example {
+    0%   {bottom:110px;left:50px;}
+    50%  {bottom:130px;left:50px;}
+    100% {bottom:110px;left:50px;}
+}
+
+@-webkit-keyframes example2 {
+    0%   {bottom:70px;left:0px;}
+    50%  {bottom:55px;left:0px;}
+    100% {bottom:70px;left:0px;}
+}
+
+/* Standard syntax */
+@keyframes example2 {
+    0%   {bottom:70px;left:0px;}
+    50%  {bottom:55px;left:0px;}
+    100% {bottom:70px;left:0px;}
+}
+
+
