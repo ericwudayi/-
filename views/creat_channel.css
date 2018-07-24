@@ -162,4 +162,13 @@ transform:matrix(-0.94,-0.34,-1.54,-1.62,0,0);
     100% {bottom:70px;left:0px;}
 }
 
+/*FOR TEXT EFFECT*/
+@-webkit-keyframes texteffect {
+    0%   {position:relative;top:10px;opacity:0;}
+    100% {position:relative;top:10px;opacity:1;}
+}
 
+@keyframes example2 texteffect{
+    0%   {position:relative;top:10px;opacity:0;}
+    100% {position:relative;top:10px;opacity:1;}
+}
