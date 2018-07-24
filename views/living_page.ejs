@@ -287,9 +287,13 @@
             var content = document.getElementById("content");
             var maxPrice = document.getElementById("maxPrice");
             var p_name = document.getElementById("P_name");
+            
 
             socket.on("connect", function () {
-                status.innerText = "Connected.";              
+                status.innerText = "Connected.";
+                //var formChild = sendForm.children;
+                //var name = formChild[0];
+                socket.emit('join');            
             });
  
             socket.on("disconnect", function () {

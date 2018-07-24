@@ -18,6 +18,7 @@ app.use(express.static(__dirname));
 app.set('views', __dirname+'/views');
 app.engine('html',require('ejs').renderFile)
 app.set('view engine','html')
+
 app.use(bodyParser());
 
 app.get('/',(req,res) => {
@@ -38,11 +39,13 @@ app.post('/reg',(req,res)=>{
 	res.redirect('/');
 });
 
-app.get('/living',(req,res)=>{
+app.get('/living/:roomID',(req,res)=>{
 	console.log("login:" + req.session.login_status);
+	var roomID = req.params.roomID;
 	res.render('living_page.ejs',{
 		login : req.session.login_status,
-		user : req.session.user
+		user : req.session.user,
+		roomID : roomID
 	});
 });
 
@@ -83,42 +86,75 @@ app.get('/rtmp/push', function (req, res) {
 
 
 // 當發生連線事件
+var roomInfo = {};
 io.on('connection', (socket) => {
-	onlineCount++;
-	maxPrice = 0;
-	priceName = "None";
-	
-	io.emit("online",onlineCount);
+
+	var url = socket.request.headers.referer;
+  	var splited = url.split('/');
+  	var roomID = splited[splited.length - 1];   // 获取房间ID
+  	console.log(roomID);
+	//onlineCount++;
+	//maxPrice = 0;
+	//priceName = "None";
+
+	socket.on("join",()=>{
+		socket.join(roomID);
+		console.log("join");
+		if (!roomInfo[roomID]) {
+		  console.log("New room");
+		  var onlineCount = 0;
+		  var maxPrice = 0;
+		  var priceName = "None";
+	      roomInfo[roomID] = {};
+	      roomInfo[roomID].onlineCount = onlineCount;
+	      roomInfo[roomID].maxPrice = maxPrice;
+	      roomInfo[roomID].priceName = priceName;
+	    }
+	    
+	 
+	    socket.join(roomID);    // 加入房间
+	    // 通知房间内人员
+	    roomInfo[roomID].onlineCount +=1; 
+	    io.to(roomID).emit("online",roomInfo[roomID].onlineCount);
+	    socket.emit("compare", {name:roomInfo[roomID].priceName,msg:roomInfo[roomID].maxPrice});
+		socket.emit("greet",roomInfo[roomID].onlineCount);
+
+	});
+
 	console.log('Hello!');  // 顯示 Hello!
 	
 	socket.on("greet",() => {
-		socket.emit("compare", {name:priceName,msg:maxPrice});
-		socket.emit("greet",onlineCount)
+		socket.emit("compare", {name:roomInfo[roomID].priceName,msg:roomInfo[roomID].maxPrice});
+		socket.emit("greet",roomInfo[roomID].onlineCount)
 	})
+
 	socket.on("send", (msg) => {
 		console.log(msg);
 		//if (Object.keys(msg).length < 2) return;
 		//msg.name = name;
 
 		// 廣播訊息到聊天室
-		io.emit("msg", msg);
+		io.to(roomID).emit("msg", msg);
 	});
 
 	socket.on("price",(msg)=>{
 		console.log(msg);
+		//console.log(roomID);
+		//console.log(roomInfo[roomID]);
 		if((Object.values(msg)[1]>=0)&&(Object.values(msg)[1]<=999))
-		{
-			if(Object.values(msg)[1]>maxPrice)
+		{	
+			if(Object.values(msg)[1]>roomInfo[roomID].maxPrice)
 			{   
-				maxPrice = Object.values(msg)[1];
-				io.emit("compare", msg);
+				roomInfo[roomID].maxPrice = Object.values(msg)[1];
+				roomInfo[roomID].priceName = Object.values(msg)[0];
+				io.to(roomID).emit("compare", msg);
 			}
 		}
 	});
 	// 當發生離線事件
 	socket.on('disconnect', () => {
-		onlineCount = (onlineCount<0) ? 0:onlineCount-=1;
-		io.emit("online",onlineCount);
+		roomInfo[roomID].onlineCount = (roomInfo[roomID].onlineCount<0) ? 0:roomInfo[roomID].onlineCount-=1;
+		io.to(roomID).emit("online",roomInfo[roomID].onlineCount);
 
 		console.log('Bye~');  // 顯示 bye~
 	});
