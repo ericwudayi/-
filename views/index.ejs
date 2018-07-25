@@ -160,6 +160,12 @@
               <li class="nav-item">
                 <a class="nav-link" href="/creatChannel">創建頻道</a>
               </li>
+              <script>
+                var source = new EventSource('/events');
+                source.onmessage = function(e) {
+                      document.body.innerHTML += e.data + '<br>';
+                };
+              </script> 
                <% if (!login) { %>
               
                
@@ -181,42 +187,40 @@
         <h5 style="margin-left: 20px; margin-top: 7px">熱門直播主 Hot~</h5>
         
         
-        <div class="container-fluid">
-          <div class="row">
-            <div class="col-xs-8 col-sm-6 col-md-4 col-lg-3" style="margin-bottom: 10px">
-              <a href="/living/1"><img src="views/img/sample1.gif" class="img-fluid" alt="Responsive image"/></a>
-              
-            </div>
-             <div class="col-xs-8 col-sm-6 col-md-4 col-lg-3" style="margin-bottom: 10px">
-              <a href="/living/2" onclick="location.href=this.href+'?key='+<%=user %>;return false;"> <img src="views/img/sample_2.jpg" class="img-fluid" alt="Responsive image"/></a>
-              
-            </div>
+        <div class="container-fluid" id="living-people">
+          <div class="row" id="rows">
+            
 
-            <div class="col-xs-8 col-sm-6 col-md-4 col-lg-3" style="margin-bottom: 10px">
-              <a href="/living/?name=<%= user %>&roomid=1"><img src="views/img/sample_3.jpg" class="img-fluid" alt="Responsive image"/></a>
-              
-            </div>
 
-             <div class="col-xs-8 col-sm-6 col-md-4 col-lg-3" style="margin-bottom: 10px">
-              <a href="/living"><img src="views/img/sample_4.jpg" class="img-fluid" alt="Responsive image"/></a>
-              
-            </div>
-             <div class="col-xs-8 col-sm-6 col-md-4 col-lg-3" style="margin-bottom: 10px">
-              <a href="/living"><img src="views/img/sample_5.jpg" class="img-fluid" alt="Responsive image"/></a>
-              
-            </div>
-             <div class="col-xs-8 col-sm-6 col-md-4 col-lg-3" style="margin-bottom: 10px">
-              <a href="/living"><img src="views/img/sample_6.jpg" class="img-fluid" alt="Responsive image"/></a>
-              
-            </div>
-             <div class="col-xs-8 col-sm-6 col-md-4 col-lg-3" style="margin-bottom: 10px">
-              <a href="/living"><img src="views/img/sample_7.jpg" class="img-fluid" alt="Responsive image"/></a>
-              
-            </div>
-             <div class="col-xs-8 col-sm-6 col-md-4 col-lg-3" style="margin-bottom: 10px">
-              <a href="/living"><img src="views/img/sample_8.jpg" class="img-fluid" alt="Responsive image"/></a>
-              
-            </div>
+            <script>
+                window.onload = function(){   
+                    
+                    var Allrooms =<%- Allrooms %>;
+                    for (var room in Allrooms){
+                      var id = Allrooms[room].roomid;
+                      var roomBox = document.createElement("div")
+                      roomBox.className = "col-xs-8 col-sm-6 col-md-4 col-lg-3";
+                      roomBox.style.marginBottom= "10px";
+                      
+                      var a = document.createElement('a');
+                      a.setAttribute('href',"/living/"+id); //room.roomID;
+                      var room_img = document.createElement("img");
+                      room_img.setAttribute('src',"views/img/sample_"+"3"+".jpg");
+                      room_img.className="img-fluid";
+                      room_img.setAttribute('alt',"Responsive image");
+                      //room_img.src = "views/img/sample_"+"3"+".jpg";
+                      //room_img.className="img-fluid";
+                      a.appendChild(room_img);
+                      roomBox.appendChild(a);
+                      
+                      document.getElementById("rows").appendChild(roomBox);
+                      
+                      //alert( " = " + Allrooms[room].maxPrice);
+
+                    } ;     
+                };
+            </script>
+             
 
 
             

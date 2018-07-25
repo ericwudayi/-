@@ -3,17 +3,21 @@ const express = require('express');
 const app = express();
 var bodyParser = require('body-parser');
 const session = require('express-session')
+var SSE = require('sse-nodejs');
+
 // 加入這兩行
 const server = require('http').Server(app);
-const io = require('socket.io')(server);
+const io = require('socket.io')(server,{'pingInterval': 2000, 'pingTimeout': 5000});
 app.use(session({
   secret: 'recommand 128 bytes random string', // 建议使用 128 个字符的随机字符串
   cookie: { maxAge: 600 * 1000 }
 }));
 
 
-let onlineCount = 0;
-let maxPrice = 1 
+//let onlineCount = 0;
+//let maxPrice = 1 
+var roomInfo = {};
+
 app.use(express.static(__dirname));
 app.set('views', __dirname+'/views');
 app.engine('html',require('ejs').renderFile)
@@ -25,13 +29,15 @@ app.get('/',(req,res) => {
 
 	res.render('index.ejs',{
 		login : req.session.login_status,
-		user : req.session.user
+		user : req.session.user,
+		Allrooms : JSON.stringify(roomInfo)
 	});
 });
 
 app.post('/reg',(req,res)=>{
 	console.log("post something");
 	console.log('body: ' + JSON.stringify(req.body));
+
 	req.session.user = req.body.username;
 	req.session.login_status = true;
 	//login_status = true
@@ -45,7 +51,7 @@ app.get('/living/:roomID',(req,res)=>{
 	res.render('living_page.ejs',{
 		login : req.session.login_status,
 		user : req.session.user,
-		roomID : roomID
+		Allrooms: JSON.stringify(roomInfo)
 	});
 });
 
@@ -68,13 +74,30 @@ app.get('/creatChannel',(req,res)=>{
 
 app.post('/creat_channel',(req,res)=>{
 	var sess = req.session;
-	var channel_name = req.body.channel_name;
-	fs.mkdir(channel_name,function(err){
-		console.log(err);
-	})
+	var roomID = req.body.channel_name;
+	//fs.mkdir(channel_name,function(err){
+	//	console.log(err);
+	//});
+	if (!roomInfo[roomID]) {
+		console.log("New room");
+		var onlineCount = 0;
+		var maxPrice = 0;
+		var priceName = "None";
+	    roomInfo[roomID] = {};
+	    roomInfo[roomID].roomid = roomID;
+	    roomInfo[roomID].onlineCount = onlineCount;
+	    roomInfo[roomID].maxPrice = maxPrice;
+	    roomInfo[roomID].priceName = priceName;
+	}
+    
+    
+    //Allrooms.push(roomInfo[roomID].roomid);
+   
+    //console.log(Allrooms);
 	res.render('index.ejs',{
 		login : sess.login_status,
-		user : sess.user
+		user : sess.user,
+		Allrooms: JSON.stringify(roomInfo)
 	});
  
 });
@@ -86,8 +109,9 @@ app.get('/rtmp/push', function (req, res) {
 
 
 // 當發生連線事件
-var roomInfo = {};
+
 io.on('connection', (socket) => {
+
 
 	var url = socket.request.headers.referer;
   	var splited = url.split('/');
@@ -96,6 +120,7 @@ io.on('connection', (socket) => {
 	//onlineCount++;
 	//maxPrice = 0;
 	//priceName = "None";
+	
 
 	socket.on("join",()=>{
 		socket.join(roomID);
@@ -114,19 +139,19 @@ io.on('connection', (socket) => {
 	 
 	    socket.join(roomID);    // 加入房间
 	    // 通知房间内人员
-	    roomInfo[roomID].onlineCount +=1; 
+	    roomInfo[roomID].onlineCount =roomInfo[roomID].onlineCount+1; 
 	    io.to(roomID).emit("online",roomInfo[roomID].onlineCount);
 	    socket.emit("compare", {name:roomInfo[roomID].priceName,msg:roomInfo[roomID].maxPrice});
-		socket.emit("greet",roomInfo[roomID].onlineCount);
+		//socket.emit("greet",roomInfo[roomID].onlineCount);
 
 	});
 
 	console.log('Hello!');  // 顯示 Hello!
 	
-	socket.on("greet",() => {
-		socket.emit("compare", {name:roomInfo[roomID].priceName,msg:roomInfo[roomID].maxPrice});
-		socket.emit("greet",roomInfo[roomID].onlineCount)
-	})
+	//socket.on("greet",() => {
+	//	socket.emit("compare", {name:roomInfo[roomID].priceName,msg:roomInfo[roomID].maxPrice});
+	//	socket.emit("greet",roomInfo[roomID].onlineCount)
+	//})
 
 	socket.on("send", (msg) => {
 		console.log(msg);
@@ -141,7 +166,7 @@ io.on('connection', (socket) => {
 		console.log(msg);
 		//console.log(roomID);
 		//console.log(roomInfo[roomID]);
-		if((Object.values(msg)[1]>=0)&&(Object.values(msg)[1]<=999))
+		if((Object.values(msg)[1]>=0)&&(Object.values(msg)[1]<=10000))
 		{	
 			if(Object.values(msg)[1]>roomInfo[roomID].maxPrice)
 			{   
@@ -151,10 +176,17 @@ io.on('connection', (socket) => {
 			}
 		}
 	});
+
+
 	// 當發生離線事件
 	socket.on('disconnect', () => {
-		roomInfo[roomID].onlineCount = (roomInfo[roomID].onlineCount<0) ? 0:roomInfo[roomID].onlineCount-=1;
+		if (roomInfo[roomID].onlineCount<0){
+			roomInfo[roomID].onlineCount=0;
+		}
+		else
+			roomInfo[roomID].onlineCount = roomInfo[roomID].onlineCount-1;
 		io.to(roomID).emit("online",roomInfo[roomID].onlineCount);
+		socket.leave(roomID);
 
 		console.log('Bye~');  // 顯示 bye~
 	});

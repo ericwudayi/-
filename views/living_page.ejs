@@ -13,9 +13,8 @@
     </style>
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.4/vue.js"></script>
-    <script>
-        var socket = io();
-    </script>
+    
+    
     <style>
     html, body {
         padding: 0;
@@ -287,15 +286,22 @@
             var content = document.getElementById("content");
             var maxPrice = document.getElementById("maxPrice");
             var p_name = document.getElementById("P_name");
-            
+            var join = 0;
 
+            var socket= io.connect( 'http://127.0.0.1:3000', {reconnect: true} );
             socket.on("connect", function () {
+                
+            
                 status.innerText = "Connected.";
                 //var formChild = sendForm.children;
                 //var name = formChild[0];
-                socket.emit('join');            
+                socket.emit('join');
+                
             });
- 
+            
+            
+            
+
             socket.on("disconnect", function () {
                 status.innerText = "Disconnected.";
             });
@@ -322,6 +328,11 @@
                 msgBox.appendChild(nameBox);
                 msgBox.appendChild(msg);
                 content.appendChild(msgBox);
+            });
+
+            socket.on( 'disconnect', function () {
+                console.log( 'disconnected from server' );
+                
             });
 
             sendForm.addEventListener("submit", function (e) {
@@ -358,6 +369,8 @@
              
         });
         
+
+
         function myFunction() {
             var x = document.getElementById("container");
             var y = document.getElementById("container2");
