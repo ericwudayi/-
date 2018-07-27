@@ -6,6 +6,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
+<<<<<<< HEAD
   <head>
     <meta charset="utf-8">
   <link rel="dns-prefetch" href="https://assets-cdn.github.com">
@@ -640,6 +641,229 @@
 
       <div class="select-menu-list select-menu-tab-bucket js-select-menu-tab-bucket" data-tab-filter="tags">
         <div data-filterable-for="context-commitish-filter-field" data-filterable-type="substring">
+=======
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <link rel="stylesheet" href="/resources/demos/style.css">
+        <title>test page</title>
+        
+<!--jump-->
+        <style>
+            label, input { display:block; }
+            input.text { margin-bottom:12px; width:95%; padding: .4em; }
+            fieldset { padding:0; border:0; margin-top:25px; }
+            h1 { font-size: 1.2em; margin: .6em 0; }
+            div#users-contain { width: 350px; margin: 20px 0; }
+            div#users-contain table { margin: 1em 0; border-collapse: collapse; width: 100%; }
+            div#users-contain table td, div#users-contain table th { border: 1px solid #eee; padding: .6em 10px; text-align: left; }
+            .ui-dialog .ui-state-error { padding: .3em; }
+            .validateTips { border: 1px solid transparent; padding: 0.3em; }
+        </style>
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script>
+         $( function() {
+            var dialog, form,
+
+              // From http://www.whatwg.org/specs/web-apps/current-work/multipage/states-of-the-type-attribute.html#e-mail-state-%28type=email%29
+              emailRegex = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
+              name = $( "#name" ),
+              email = $( "#email" ),
+              password = $( "#password" ),
+              allFields = $( [] ).add( name ).add( email ).add( password ),
+              tips = $( ".validateTips" );
+
+            function updateTips( t ) {
+              tips
+                .text( t )
+                .addClass( "ui-state-highlight" );
+              setTimeout(function() {
+                tips.removeClass( "ui-state-highlight", 1500 );
+              }, 500 );
+            }
+
+            function checkLength( o, n, min, max ) {
+              if ( o.val().length > max || o.val().length < min ) {
+                o.addClass( "ui-state-error" );
+                updateTips( "Length of " + n + " must be between " +
+                  min + " and " + max + "." );
+                return false;
+              } else {
+                return true;
+              }
+            }
+
+            function checkRegexp( o, regexp, n ) {
+              if ( !( regexp.test( o.val() ) ) ) {
+                o.addClass( "ui-state-error" );
+                updateTips( n );
+                return false;
+              } else {
+                return true;
+              }
+            }
+
+            function addUser() {
+               var valid = true;
+              allFields.removeClass( "ui-state-error" );
+
+              valid = valid && checkLength( name, "username", 3, 16 );
+              valid = valid && checkLength( email, "email", 6, 80 );
+              valid = valid && checkLength( password, "password", 5, 16 );
+
+              valid = valid && checkRegexp( name, /^[a-z]([0-9a-z_\s])+$/i, "Username may consist of a-z, 0-9, underscores, spaces and must begin with a letter." );
+              valid = valid && checkRegexp( email, emailRegex, "eg. ui@jquery.com" );
+              valid = valid && checkRegexp( password, /^([0-9a-zA-Z])+$/, "Password field only allow : a-z 0-9" );
+
+
+              if (valid){
+                var data = {};
+                data.username = name.val();
+                $.ajax({
+                  type: "post",
+                  url: "reg",
+                  timeout: 2000,
+                  data: JSON.stringify(data),
+                  contentType: 'application/json',
+                  success: function(data) {
+                              console.log('success');
+                              console.log(JSON.stringify(data));
+                          },
+                  error: function(jqXHR, textStatus, err) {
+                //show error message
+                    alert('aa' + name.val());
+                    alert(xhr.statusText);
+                    console.log(textStatus);
+                    console.log(error);
+                  }
+                  
+                });
+                dialog.dialog( "close" );
+                location.reload();
+              }  
+            }
+
+            dialog = $( "#dialog-form" ).dialog({
+              autoOpen: false,
+              height: 400,
+              width: 350,
+              modal: true,
+              buttons: {
+                "Create an account": addUser,
+                Cancel: function() {
+                  dialog.dialog( "close" );
+                }
+              },
+              close: function() {
+                form[ 0 ].reset();
+                allFields.removeClass( "ui-state-error" );
+              }
+            });
+
+            form = dialog.find( "form" ).on( "submit", function( event ) {
+              event.preventDefault();
+              addUser();
+            });
+
+            $( "#create-user" ).button().on( "click", function() {
+              dialog.dialog( "open" );
+            });
+          } );
+        </script>
+<!--jump-->
+
+    </head>
+        <body bgcolor="#cccccc">
+      <header>
+       
+        <nav class="navbar navbar-light sticky-top" style="background-color: #e3f2fd;">
+          <h1 class="navbar-brand" href="#">78 直播</h1>
+<!--
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="true" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+-->
+          
+          
+<!--          <div class="collapse navbar-collapse" id="navbarNavDropdown">-->
+            <form class="form-inline">
+              <input class="form-control mr-sm-4" type="search" placeholder="找商城、直播主..." aria-label="Search">
+              <button class="btn btn-outline-success my-2 my-sm-0" type="submit">搜尋</button>
+            </form>
+            
+            <ul class="nav justify-content-end">
+              <li class="nav-item">
+                <a class="nav-link" href="/creatChannel">創建頻道</a>
+              </li>
+              <script>
+                var source = new EventSource('/events');
+                source.onmessage = function(e) {
+                      document.body.innerHTML += e.data + '<br>';
+                };
+              </script> 
+               <% if (!login) { %>
+              
+               
+              <button id="create-user">註冊</button>
+              <li class="nav-item">
+                <a class="btn btn-primary" href="/login">登入</a>
+              </li>
+              <% } %>
+                
+              <% if(login) { %>
+              <li class="nav-item">
+                <a class="nav-link" href="/profile"><%=user%></a>
+              <% } %>
+            </ul>
+<!--          </div>-->
+          
+        </nav>
+        
+        <h5 style="margin-left: 20px; margin-top: 7px">熱門直播主 Hot~</h5>
+        
+        
+        <div class="container-fluid" id="living-people">
+          <div class="row" id="rows">
+            
+
+
+            <script>
+                window.onload = function(){   
+                    
+                    var Allrooms =<%- Allrooms %>;
+                    for (var room in Allrooms){
+                      var id = Allrooms[room].roomid;
+                      var roomBox = document.createElement("div")
+                      roomBox.className = "col-xs-8 col-sm-6 col-md-4 col-lg-3";
+                      roomBox.style.marginBottom= "10px";
+                      
+                      var a = document.createElement('a');
+                      a.setAttribute('href',"/living/"+id); //room.roomID;
+                      var room_img = document.createElement("img");
+                      room_img.setAttribute('src',"views/img/sample_"+"3"+".jpg");
+                      room_img.className="img-fluid";
+                      room_img.setAttribute('alt',"Responsive image");
+                      //room_img.src = "views/img/sample_"+"3"+".jpg";
+                      //room_img.className="img-fluid";
+                      a.appendChild(room_img);
+                      roomBox.appendChild(a);
+                      
+                      document.getElementById("rows").appendChild(roomBox);
+                      
+                      //alert( " = " + Allrooms[room].maxPrice);
+
+                    } ;     
+                };
+            </script>
+             
+>>>>>>> be5d4e69371a008c35ac86ac29ddab07e937fe98
 
 
         </div>

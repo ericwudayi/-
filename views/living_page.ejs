@@ -13,9 +13,8 @@
     </style>
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.4/vue.js"></script>
-    <script>
-        var socket = io();
-    </script>
+    
+    
     <style>
     html, body {
         padding: 0;
@@ -195,9 +194,39 @@
                     <h5>推薦影片:</h5>
                 </div>
                 
-                <div class="col-xs-8 col-sm-6 col-md-4 col-lg-3" style="padding: : 0 10px 0; margin-bottom: 10px">
-                  <img src="views/img/video.PNG" class="img-fluid" alt="Responsive image"/>
-                </div>
+                <div id="my_camera"></div>
+    
+                <!-- First, include the Webcam.js JavaScript Library -->
+                <script type="text/javascript" src="../webcam.min.js"></script>
+                
+                <!-- Configure a few settings and attach camera -->
+                <script language="JavaScript">
+                    Webcam.set({
+                        width: 320,
+                        height: 240,
+                        image_format: 'jpeg',
+                        jpeg_quality: 90
+                    });
+                    Webcam.attach( '#my_camera' );
+                </script>
+                
+                <!-- A button for taking snaps -->
+                <form>
+                    <input type=button value="Take Snapshot" onClick="take_snapshot()">
+                </form>
+                
+                <!-- Code to handle taking the snapshot and displaying it locally -->
+                <script language="JavaScript">
+                    function take_snapshot() {
+                        // take snapshot and get image data
+                        Webcam.snap( function(data_uri) {
+                            // display results in page
+                            document.getElementById('results').innerHTML = 
+                                '<h2>Here is your image:</h2>' + 
+                                '<img src="'+data_uri+'"/>';
+                        } );
+                    }
+                </script>
                 <div class="col-xs-8 col-sm-6 col-md-4 col-lg-3" style="padding: : 0 10px 0; margin-bottom: 10px">
                   <img src="views/img/video.PNG" class="img-fluid" alt="Responsive image"/>
                 </div>
@@ -287,11 +316,22 @@
             var content = document.getElementById("content");
             var maxPrice = document.getElementById("maxPrice");
             var p_name = document.getElementById("P_name");
+            var join = 0;
 
+            var socket= io.connect( 'http://127.0.0.1:3000', {reconnect: true} );
             socket.on("connect", function () {
-                status.innerText = "Connected.";              
+                
+            
+                status.innerText = "Connected.";
+                //var formChild = sendForm.children;
+                //var name = formChild[0];
+                socket.emit('join');
+                
             });
- 
+            
+            
+            
+
             socket.on("disconnect", function () {
                 status.innerText = "Disconnected.";
             });
@@ -318,6 +358,11 @@
                 msgBox.appendChild(nameBox);
                 msgBox.appendChild(msg);
                 content.appendChild(msgBox);
+            });
+
+            socket.on( 'disconnect', function () {
+                console.log( 'disconnected from server' );
+                
             });
 
             sendForm.addEventListener("submit", function (e) {
@@ -354,6 +399,8 @@
              
         });
         
+
+
         function myFunction() {
             var x = document.getElementById("container");
             var y = document.getElementById("container2");
