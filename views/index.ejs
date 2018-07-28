@@ -143,7 +143,7 @@
       <header>
        
         <nav class="navbar navbar-light sticky-top" style="background-color: #000;">
-          <div class="navbar-brand" href="#" style="color:#fff;font-size:40px;">L</div>
+          <div class="navbar-brand" href="#" style="color:#fff;font-size:40px;">LIVE AGE</div>
 <!--
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="true" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -153,13 +153,13 @@
           
 <!--          <div class="collapse navbar-collapse" id="navbarNavDropdown">-->
             <form class="form-inline">
-              <input class="form-control mr-sm-4" id="" type="search" placeholder="找商城、直播主..." aria-label="Search">
-              <button class="btn btn-outline-success my-2 my-sm-0" type="submit">搜尋</button>
+              <input class="form-control mr-sm-4" id="input_search" type="search" placeholder="找商城、直播主..." aria-label="Search">
+              <button class="btn btn-outline-success my-2 my-sm-0" id="btn" type="submit">搜尋</button>
             </form>
             
             <ul class="nav justify-content-end">
               <li class="nav-item">
-                <a class="nav-link" href="/creatChannel">創建頻道</a>
+                <a class="nav-link" style="color:#fff;" href="/creatChannel">創建頻道</a>
               </li>
               <script>
                 var source = new EventSource('/events');
@@ -170,9 +170,9 @@
                <% if (!login) { %>
               
                
-              <button id="create-user">註冊</button>
+              <button id="create-user" class="register_btn">註冊</button>
               <li class="nav-item">
-                <a class="btn btn-primary" href="/login">登入</a>
+                <a class="btn btn-primary" id="btn" href="/login">登入</a>
               </li>
               <% } %>
                 
