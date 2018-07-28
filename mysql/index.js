@@ -3,47 +3,63 @@ var app     = express();
 var port    = process.env.PORT || 8080;
 
 
-//載入MySQL模組
-var mysql = require('mysql');
-//建立連線
-var connection = mysql.createConnection({
-    host: '127.0.0.1',
-    user: 'root',
-    password: 'aannss456',
-    database: 'streaming'
-});
+function getRoom(roomID) {
 
+    var mysql = require('mysql');
 
-// connection.connect();
+    var connection = mysql.createConnection({
+        host: '127.0.0.1',
+        user: 'root',
+        password: 'aannss456',
+        database: 'streaming'
+    });
 
+    var query = 'SELECT a.token,a.create_time,b.name FROM room a INNER JOIN user b on a.user_id = b.id WHERE 1 '
+    if(roomID!=null){
+        query += 'AND b.name like \'%'+roomID+'%\' '
+    }
+    query += ' ORDER BY a.create_time';    
 
-app.get('/sample', function(req, res) {
-
-    var query = 'SELECT a.token,a.create_time,b.name FROM room a INNER JOIN user b on a.user_id = b.id ORDER BY a.create_time'    
-
+    connection.connect();
     connection.query(query,function(error, rows, fields){
 
         if(error){
             throw error;
         }
-        console.log(rows);
+        return rows;
         
     });
 
-});
+    connection.end();
+}
 
 
-// //});
+function startStreaming(userID,userToken){
 
-//     router.get('/:userName', function(req, res) {
-//         var userName = req.params.userName;
-//         var query = 'SELECT a.token,a.create_time,b.name FROM room a INNER JOIN user b on a.user_id = b.id where b.name like \'%'+userName+'%\' ORDER BY a.create_time'
-//     });
+    var mysql = require('mysql');
+    var dt = new Date();
+    var token = Math.random().toString(36).substr(2)+dt.getTime()
 
+    var connection = mysql.createConnection({
+        host: '127.0.0.1',
+        user: 'root',
+        password: 'aannss456',
+        database: 'streaming'
+    });
 
+    var query = 'INSERT INTO room(\'user_id\', \'token\', \`create_time\`) VALUES (';
+    query += '\''+userID+'\',\''+token+'\',\''+new Date().toISOString().slice(0, 19).replace('T', ' ')+'\')';    
 
+    connection.connect();
+    connection.query(query,function(error, rows, fields){
 
-// connection.end();
+        if(error){
+            throw error;
+        }
+        return rows;
+        
+    });
 
+    connection.end();
 
-//docker run --name mysql -e MYSQL_ROOT_PASSWORD=MY_PASSWORD -p 127.0.0.1:3306:3306 -d mysql/mysql-server:5.7
+}
