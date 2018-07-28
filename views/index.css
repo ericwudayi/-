@@ -1,11 +1,35 @@
 @import url('https://fonts.googleapis.com/css?family=Russo+One');
-
+@import url(https://fonts.googleapis.com/earlyaccess/notosanstc.css);
 body{
 	
 	background-color:#fff;
 }
 
+#title1{
+    margin-left:10px;
+	padding-left:10px;
+	
+	font-size:25px;
+	font-family: 'Noto Sans TC', sans-serif;
+	background-color:#000;
+	color:#fff;
+	border-radius:20px 20px 0 0;
+	width:150px;
+}
+#living-people{
+	padding-top:20px;
+	width:99%;
+	border:2px #000 solid;
+	padding-bottom:20px;
+}
 
+.img-fluid{
+	border-radius:30px;
+	-webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+	-moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+	box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+
+}
 
 #mask1{
 	text-align:center;
