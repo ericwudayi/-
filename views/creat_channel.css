@@ -2,6 +2,7 @@
 body{
 	/*background-image: linear-gradient(to right bottom, #e97216, #ff8480, #ffadcd, #fadaf7, #ffffff);*/
 	height:900px;
+	background:url(img/bk4.jpg) fixed;
 }
 
 
