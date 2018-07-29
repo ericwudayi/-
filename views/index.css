@@ -102,3 +102,31 @@ body{
 	100% { background-position: 0% 25%; }
 }
 
+#efc{
+	/* Safari 4.0 - 8.0 */
+    -webkit-animation-name: texteffect;
+    -webkit-animation-duration: 0.3s;
+    -webkit-animation-timing-function: linear;
+    -webkit-animation-delay: 0s;
+    -webkit-animation-iteration-count: 1;
+    -webkit-animation-direction: normal;
+    /* Standard syntax */
+    animation-name: texteffect;
+    animation-duration: 0.3s;
+    animation-timing-function: linear;
+    animation-delay: 0s;
+    animation-iteration-count: 1;
+    animation-direction: normal;
+	
+	
+}
+/*FOR TEXT EFFECT*/
+@-webkit-keyframes texteffect {
+    0%   {position:relative;top:-20px;opacity:0.3;}
+    100% {position:relative;top:0px;opacity:1;}
+}
+
+@keyframes example2 texteffect{
+    0%   {position:relative;top:-20px;opacity:0.3;}
+    100% {position:relative;top:0px;opacity:1;}
+}
