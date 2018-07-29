@@ -63,3 +63,66 @@ function startStreaming(userID,userToken){
     connection.end();
 
 }
+
+function createUser(name,pass,email,age){
+
+    var mysql = require('mysql');
+    var dt = new Date();
+    var token = Math.random().toString(36).substr(2)+dt.getTime()
+
+    var connection = mysql.createConnection({
+        host: '127.0.0.1',
+        user: 'root',
+        password: 'aannss456',
+        database: 'streaming'
+    });
+
+    var query = 'INSERT INTO user(\'name\', \'pass\',  \'email\', \'age\', \'create_time\', \'update_time\') VALUES (\''+name+'\', \''+pass+'\', '+email+'\', \''+age+'\', \''+new Date().toISOString().slice(0, 19).replace('T', ' ')+'\')';   
+
+    connection.connect();
+    connection.query(query,function(error, rows, fields){
+
+        if(error){
+            throw error;
+        }
+        return rows;
+        
+    });
+
+    connection.end();
+
+}
+
+
+function login(name, pass) {
+
+    var mysql = require('mysql');
+    var dt = new Date();
+    var token = Math.random().toString(36).substr(2)+dt.getTime()
+
+    var connection = mysql.createConnection({
+        host: '127.0.0.1',
+        user: 'root',
+        password: 'aannss456',
+        database: 'streaming'
+    });
+
+    var query = 'SELECT * FROM `user` WHERE name = \''+name+'\' AND pass = \''+pass+'\'';   
+
+    connection.connect();
+    connection.query(query,function(error, rows, fields){
+
+        if(error){
+            throw error;
+        }
+        if(rows!=null){
+            return 'success';
+        }else{
+            return 'false';
+        }
+        
+    });
+
+    connection.end();
+
+}
